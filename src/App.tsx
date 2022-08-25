@@ -2,6 +2,7 @@ import r100 from "./mock/r100.json";
 import r200 from "./mock/r200.json";
 import r300 from "./mock/r300.json";
 
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   Box,
   Checkbox,
@@ -10,90 +11,96 @@ import {
   Heading,
   Link,
   SimpleGrid,
-  Text,
-  Tooltip,
-  VStack,
+  Text, VStack
 } from "@chakra-ui/react";
+import { filters } from "./filters";
 
 let repos = [...r100, ...r200, ...r300];
-
-const filters = [
-  { value: "Java", label: "Java" },
-  { value: "React", label: "React" },
-  { value: "Redux", label: "Redux" },
-  { value: "React Native", label: "React Native" },
-  { value: "Swift", label: "Swift" },
-  { value: "Typescript", label: "Typescript" },
-  { value: "Javascript", label: "Javascript" },
-  { value: "CRUD", label: "CRUD" },
-  { value: "Flutter", label: "Flutter" },
-  { value: "Template", label: "Template" },
-  { value: "Go", label: "Go" },
-  { value: "Nextjs", label: "Nextjs" },
-  { value: "Remix", label: "Remix" },
-  { value: "Express", label: "Express" },
-  { value: "Fastify", label: "Fastify" },
-  { value: "Nestjs", label: "Nestjs" },
-  { value: "Mobile", label: "Mobile" },
-];
 
 export default function App() {
   return (
     <Container maxW="container.lg">
-      <Heading>Repos Hub</Heading>
+      <VStack spacing={5} alignItems="flex-start">
+        <Flex justify="space-between" w='100%'>
+          <Box>
+            <Heading>Repos Hub</Heading>
+          </Box>
+          <Box>
+            <Heading>Total {repos.filter(repo => !repo.fork).length}</Heading>
+          </Box>
+        </Flex>
+        <Box>
+          <Box p={5} border="1px solid" borderColor="gray.300" rounded="md">
+            <Flex gap={3} flexWrap="wrap">
+              {filters
 
-      <Box p={5}>
-        <Text>Filters</Text>
-        <Box p={5}>
-          <Flex gap={3} flexWrap="wrap">
-            {filters.map((filter) => {
-              return <Checkbox bg='blue.50' px={2} rounded='lg' value={filter.value}>{filter.label}</Checkbox>;
-            })}
-          </Flex>
+              .map((filter) => {
+                return (
+                  <Checkbox
+                    bg=""
+                    px={2}
+                    rounded="sm"
+                    value={filter.value}
+                  >
+                    {filter.label}
+                  </Checkbox>
+                );
+              })}
+            </Flex>
+          </Box>
         </Box>
-      </Box>
 
-      <SimpleGrid spacing={5} columns={10} minChildWidth={200}>
-        {repos.map((repo) => {
-          const fork = repo.fork;
+        <SimpleGrid spacing={5} columns={4} minChildWidth={200} w='100%'>
+          {repos
+          .filter(repo => !repo.fork)
+          .map((repo) => {
+            const fork = repo.fork;
 
-          return (
-            <>
-              <Box
-                rounded="md"
-                shadow="md"
-                p={5}
-                border="1px solid"
-                color={fork ? "blue.500" : "gray.700"}
-              >
-                <VStack spacing={1} alignItems="flex-start">
-                  <Link href={repo.html_url}>
-                    <Text fontWeight={500}>{repo.name}</Text>
-                  </Link>
-                  <Tooltip label={repo.description}>
-                    <Text noOfLines={2}>{repo.description}</Text>
-                  </Tooltip>
-                  <Text px={1} bg="gray.700" color="white" rounded="md">
-                    {repo.language}
-                  </Text>
-                  <Flex gap={3} flexWrap="wrap">
-                    {repo.topics.map((topic) => (
-                      <Text px="1" bg="gray.100" rounded="md">
-                        {topic}
-                      </Text>
-                    ))}
-                  </Flex>
-                  {repo.homepage && (
-                    <Link href={repo.homepage} target="_blank">
-                      Home page
+            if (fork) return null;
+            return (
+              <>
+                <Box
+                  rounded="md"
+                  shadow="md"
+                  color="gray.700"
+                  border="1px solid"
+                  p={5}
+                  transition="all 150ms ease"
+                  _hover={{
+                    transform: 'scale(103%)',
+                    borderColor: 'blue.500',
+                    shadow: 'lg'
+                  }}
+                >
+                  <VStack spacing={1} alignItems="flex-start">
+                    <Link href={repo.html_url} target='_blank'>
+                      <Text fontWeight={500}>{repo.name}</Text>
                     </Link>
-                  )}
-                </VStack>
-              </Box>
-            </>
-          );
-        })}
-      </SimpleGrid>
+                      <Text noOfLines={2}>{repo.description}</Text>
+                    {/* <Tooltip label={repo.description}>
+                    </Tooltip> */}
+                    <Text px={1} bg="gray.700" color="white" rounded="md">
+                      {repo.language}
+                    </Text>
+                    <Flex gap={3} flexWrap="wrap">
+                      {repo.topics.map((topic) => (
+                        <Text px="1" bg="gray.100" rounded="md">
+                          {topic}
+                        </Text>
+                      ))}
+                    </Flex>
+                    {repo.homepage && (
+                      <Link href={`http://${repo.homepage}`} target='_blank'>
+                        <ExternalLinkIcon />
+                      </Link>
+                    )}
+                  </VStack>
+                </Box>
+              </>
+            );
+          })}
+        </SimpleGrid>
+      </VStack>
     </Container>
   );
 }

@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-
+import './styles.css'
 const colors = {
   brand: {
     900: "#1a365d",
