@@ -19,7 +19,7 @@ let repos = [...r100, ...r200, ...r300];
 
 export default function App() {
   return (
-    <Container maxW="container.lg">
+    <Container maxW="container.lg" py={10}>
       <VStack spacing={5} alignItems="flex-start">
         <Flex justify="space-between" w='100%'>
           <Box>
